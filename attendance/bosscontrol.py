@@ -7,6 +7,7 @@ from config import Config
 
 cache = TTLCache(maxsize=100, ttl=300)
 
+
 class BosscontrolApi:
     """
     Documentation is here https://www.bosscontrol.ru/api/docs/

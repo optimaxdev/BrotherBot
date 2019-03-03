@@ -8,6 +8,7 @@ from notify.chat import Chat
 
 @click.command()
 def send_late_list():
+    Chat().post_message("pmo_room_without_pmo", "Сейчас чо-как посчитаем ")
     users = BosscontrolApi().get_employee_records_by_date(datetime.datetime.now())
 
     user_absent = []
