@@ -24,10 +24,10 @@ def notify_late(date):
 
 
 @workflow_cli.command()
-@click.argument('project')
-def validate_single_status(project):
-    check_single_status('project = %s AND status in ("In Progress", Testing, "Code Review", "Create Checklist", '
-                           '"Write Test Cases")' % project)
+def validate_single_status():
+    check_single_status('project in (GUSA, UVP, BAC, BUG, GRO, ANT, GD, OPT, OT) AND issuetype in (Bug, Improvement, '
+                        '"New Feature", QA, Story, Task) AND status in ("In Progress", Testing, "Code Review", '
+                        '"Create Checklist", "Write Test Cases")')
 
 
 app.cli.add_command(employee_cli)
