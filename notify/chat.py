@@ -9,18 +9,20 @@ class Chat:
         self.room = Config.CHAT_SLACK_ROOM
 
     def post_message(self, channel=None, message=None, blocks=None):
-        params = {
-            'token': self.token,
-        }
+        params = {}
         if channel is None:
             params['channel'] = Config.CHAT_SLACK_ROOM
         if message is not None:
             params['text'] = message
+        if blocks is not None:
+            params['blocks'] = blocks
 
         response = requests.post(
             "https://slack.com/api/chat.postMessage",
-            params=params,
-            header={'Content-Type': 'application/json'},
-            json=blocks
+            json=params,
+            headers={
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': 'Bearer %s' % self.token
+            }
         )
         return json.loads(response.text)['ok'] is True

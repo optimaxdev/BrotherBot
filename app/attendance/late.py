@@ -10,10 +10,11 @@ def get_template(data: list, date: datetime):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Я нашел *%s* опоздавших на *%s*" % (len(data), date.strftime("%d.%m.%Y"))
+                "text": "Я нашел *%s* опоздавших на *%s*\nТоп 10 опоздавших:" % (len(data), date.strftime("%d.%m.%Y"))
             }
         }
     ]
+    counter = 0
     for user in data:
         template.append({"type": "divider"})
         template.append(
@@ -21,14 +22,17 @@ def get_template(data: list, date: datetime):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "*%s*\nПришел в %s\nОпоздание: %s минут" % (
+                    "text": "*%s* появился в %s" % (
                         user.get_name(),
-                        user.get_attendance().get_first(date).strftime("%H:%M"),
-                        '1234'
+                        user.get_attendance().get_first(date).strftime("%H:%M")
                     )
                 }
             }
         )
+        counter += 1
+        if counter >= 10:
+            break
+
     return template
 
 
