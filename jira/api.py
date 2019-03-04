@@ -10,6 +10,15 @@ DEFAULT_UVP_JQL = 'project = UVP AND status in ("In Progress", Testing, "Code Re
                   'skazqa0702) '
 
 
+class JiraProject:
+    def __init__(self, data=None) -> None:
+        super().__init__()
+        self.data = data
+
+    def get_name(self):
+        return self.data['name']
+
+
 class JiraStatus:
     def __init__(self, data: dict) -> None:
         super().__init__()
@@ -43,6 +52,7 @@ class JiraIssue:
         self.data = data
         self.assignee = None
         self.status = JiraStatus(data['fields']['status'])
+        self.project = JiraProject(data['fields']['project'])
         if data['fields']['assignee'] is not None:
             self.assignee = JiraUser(data['fields']['assignee'])
 
@@ -52,11 +62,20 @@ class JiraIssue:
     def get_key(self):
         return self.data['key']
 
-    def get_status(self):
+    def get_status(self) -> JiraStatus:
         return self.status
 
-    def get_assignee(self):
+    def get_assignee(self) -> JiraUser:
         return self.assignee
+
+    def get_project(self) -> JiraProject:
+        return self.project
+
+    def get_url(self):
+        return '%s/browse/%s' % (Config.JIRA_HOST, self.get_key())
+
+    def get_type(self):
+        return self.data['fields']['issuetype']['name']
 
 
 class JiraIssueCollection:
@@ -87,10 +106,10 @@ class JiraApi:
         super().__init__()
         self.username = Config().JIRA_USERNAME
         self.password = Config().JIRA_PASSWORD
-        self.host = "https://jira.gusadev.com/rest"
+        self.host = Config.JIRA_HOST
 
     def search(self, jql: str):
-        response = requests.get(self.host + '/api/2/search', params={'jql': jql}, auth=(self.username, self.password))
+        response = requests.get('%s/rest/api/2/search' % self.host, params={'jql': jql, 'maxResults': 1000}, auth=(self.username, self.password))
         if not response.ok:
-            return None
+            return JiraIssueCollection()
         return JiraIssueCollection(json.loads(response.text)['issues'])

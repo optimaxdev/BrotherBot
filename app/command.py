@@ -5,8 +5,10 @@ from flask.cli import AppGroup
 from app import app
 from app.attendance.absent import notify_absent_employees
 from app.attendance.late import notify_late_employees
+from app.workflow.validation.singlestatus import check_single_status
 
 employee_cli = AppGroup('employee')
+workflow_cli = AppGroup('workflow')
 
 
 @employee_cli.command()
@@ -21,4 +23,12 @@ def notify_late(date):
     notify_late_employees(datetime.datetime.strptime(date, '%Y-%m-%d'))
 
 
+@workflow_cli.command()
+@click.argument('project')
+def validate_single_status(project):
+    check_single_status('project = %s AND status in ("In Progress", Testing, "Code Review", "Create Checklist", '
+                           '"Write Test Cases")' % project)
+
+
 app.cli.add_command(employee_cli)
+app.cli.add_command(workflow_cli)

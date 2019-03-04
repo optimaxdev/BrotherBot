@@ -14,5 +14,6 @@ class Config(object):
     ATTENDANCE_BOSSCONTROL_USERNAME = os.environ.get('ATTENDANCE_BOSSCONTROL_USERNAME') or 'bosscontrol-username'
     ATTENDANCE_BOSSCONTROL_PASSWORD = os.environ.get('ATTENDANCE_BOSSCONTROL_PASSWORD') or 'bosscontrol-password'
 
+    JIRA_HOST = os.environ.get('JIRA_HOST') or 'http://127.0.0.1'
     JIRA_USERNAME = os.environ.get('JIRA_USERNAME') or 'jira-username'
     JIRA_PASSWORD = os.environ.get('JIRA_PASSWORD') or 'jira-password'
