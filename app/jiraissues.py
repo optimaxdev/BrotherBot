@@ -8,6 +8,8 @@ def send_message(message):
 
 def check_issue_unique():
     collection = JiraApi().search(DEFAULT_UVP_JQL)
+    if collection is None:
+        return
     if collection.get_length() is 0:
         send_message("Чтото ничего не нашел я по запросу и это уже зашквар. Проверь сам:\n%s" % DEFAULT_UVP_JQL)
 

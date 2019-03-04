@@ -6,21 +6,30 @@ from attendance.bosscontrol import BosscontrolApi
 from notify.chat import Chat
 
 
+def get_template_absent(data: list):
+    template = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "Cписок отсутствующих сегодня людей.\nЕсли человек в офисе, то посоветуйте ему отметиться. Он явно забыл это сделать."
+            }
+        },
+        {
+            "type": "divider"
+        },
+        {
+            "type": "section",
+            "fields": []
+        }
+    ]
+    for username in data:
+        template[2]['fields'].append({"type": "mrkdwn", "text": "*" + username + "*"})
+    return template
+
+
 @click.command()
 def send_late_list():
-    Chat().post_message("pmo_room_without_pmo", "Сейчас чо-как посчитаем ")
-    users = BosscontrolApi().get_employee_records_by_date(datetime.datetime.now())
-
-    user_absent = []
-    user_in_office = []
-    for user in users:
-        if len(user['attendance_record']) is 0:
-            user_absent.append(user['name'])
-        else:
-            user_in_office.append(user)
-    message = "Сегодня отсутствуют следующие люди:\n" + "\n".join(user_absent)
-    Chat().post_message("pmo_room_without_pmo", message)
-
     user_in_office_sorted = sorted(user_in_office, key=lambda k: k['attendance_record'][0], reverse=True)
     user_name_in_office = []
     for user in user_in_office_sorted:
