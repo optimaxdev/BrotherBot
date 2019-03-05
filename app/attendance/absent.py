@@ -14,7 +14,7 @@ def get_template_absent(data: list, date: datetime):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Cписок отсутствующих людей на %s\n"
+                "text": "Cписок отсутствующих людей на *%s*\n"
                         "Если человек в офисе, то посоветуйте ему отметиться. Он явно забыл это сделать." % date_string
             }
         },

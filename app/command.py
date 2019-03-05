@@ -18,7 +18,7 @@ def notify_absent(date):
 
 
 @employee_cli.command()
-@click.option('--date', default=datetime.datetime.now())
+@click.option('--date', default=datetime.datetime.now().strftime('%Y-%m-%d'))
 def notify_late(date):
     notify_late_employees(datetime.datetime.strptime(date, '%Y-%m-%d'))
 
