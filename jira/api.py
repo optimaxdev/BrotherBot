@@ -77,6 +77,9 @@ class JiraIssue:
     def get_type(self):
         return self.data['fields']['issuetype']['name']
 
+    def get_summary(self):
+        return self.data['fields']['summary']
+
 
 class JiraIssueCollection:
     def __init__(self, data=None) -> None:

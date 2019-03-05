@@ -12,6 +12,8 @@ class Chat:
         params = {}
         if channel is None:
             params['channel'] = Config.CHAT_SLACK_ROOM
+        else:
+            params['channel'] = channel
         if message is not None:
             params['text'] = message
         if blocks is not None:
