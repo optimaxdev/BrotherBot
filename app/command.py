@@ -5,6 +5,7 @@ from flask.cli import AppGroup
 from app import app
 from app.attendance.absent import notify_absent_employees
 from app.attendance.late import notify_late_employees
+from app.workflow.validation.duedate import check_due_date
 from app.workflow.validation.noassignee import check_no_assignee
 from app.workflow.validation.singlestatus import check_single_status
 
@@ -41,6 +42,28 @@ def validate_single_status():
 def validate_no_assignee():
     check_no_assignee('status in ("In Progress", Testing, "Code Review", "In Development", "Create Checklist", '
                       '"Write Test Cases") AND assignee in (EMPTY) ')
+
+
+@workflow_cli.command()
+def validate_due_date():
+    check_due_date('project in (OT, UVP) AND status in ("In Progress", '
+                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
+                   'EMPTY )', 'ottica')
+    check_due_date('project in (GRO, BUG) AND status in ("In Progress", '
+                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
+                   'EMPTY )', 'growth')
+    check_due_date('project in (ANT) AND status in ("In Progress", '
+                   'Testing, "Code Review", "Create Checklist", "Write Test Cases", "In Development") AND (due <= '
+                   '"0" OR due is EMPTY )', 'analytics-team')
+    check_due_date('project in (GD) AND status in ("In Progress", '
+                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
+                   'EMPTY )', 'devops')
+    check_due_date('project in (BAC) AND status in ("In Progress", '
+                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
+                   'EMPTY )', 'backend_team')
+    check_due_date('project in (GUSA, OPT) AND status in ("In Progress", '
+                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
+                   'EMPTY )', 'general')
 
 
 app.cli.add_command(employee_cli)
