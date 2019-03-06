@@ -80,6 +80,9 @@ class JiraIssue:
     def get_summary(self):
         return self.data['fields']['summary']
 
+    def get_due_date(self):
+        return self.data['fields']['duedate']
+
 
 class JiraIssueCollection:
     def __init__(self, data=None) -> None:
