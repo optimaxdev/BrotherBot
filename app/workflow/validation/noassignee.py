@@ -36,4 +36,4 @@ def get_template(data):
 
 def check_no_assignee(jql: str):
     collection = JiraApi().search(jql)
-    Chat().post_message(channel='pmo_room_without_pmo', blocks=get_template(collection.get_collection()))
+    Chat().post_message(channel='leads', blocks=get_template(collection.get_collection()))

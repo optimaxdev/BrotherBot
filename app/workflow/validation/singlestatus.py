@@ -31,7 +31,7 @@ def get_template(data):
     return template
 
 
-def check_single_status(jql: str):
+def check_single_status(jql: str, channel='general'):
     collection = JiraApi().search(jql)
 
     unique_index = {}
@@ -46,4 +46,4 @@ def check_single_status(jql: str):
 
     validate_error = {key: val for key, val in unique_index.items() if len(val) > 1}
     if len(validate_error) > 0:
-        Chat().post_message(blocks=get_template(validate_error))
+        Chat().post_message(blocks=get_template(validate_error), channel=channel)

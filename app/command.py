@@ -26,9 +26,15 @@ def notify_late(date):
 
 @workflow_cli.command()
 def validate_single_status():
-    check_single_status('project in (GUSA, UVP, BAC, BUG, GRO, ANT, GD, OPT, OT) AND issuetype in (Bug, Improvement, '
+    check_single_status('project in (UVP, BAC, BUG, GRO, ANT, GD, OPT, OT) AND issuetype in (Bug, Improvement, '
                         '"New Feature", QA, Story, Task) AND status in ("In Progress", Testing, "Code Review", '
-                        '"Create Checklist", "Write Test Cases")')
+                        '"Create Checklist", "Write Test Cases")', channel='general')
+    check_single_status('project in (GUSA, Bugtracker) AND Sprint = "Rebels" AND  issuetype in (Bug, Improvement, '
+                        '"New Feature", QA, Task) AND status in ("In Progress", Testing, "Code Review", '
+                        '"Create Checklist", "Write Test Cases")', channel='rebels')
+    check_single_status('project in (GUSA, Bugtracker) AND Sprint = "D.E.H.T.A." AND  issuetype in (Bug, Improvement, '
+                        '"New Feature", QA, Task) AND status in ("In Progress", Testing, "Code Review", '
+                        '"Create Checklist", "Write Test Cases")', channel='dehta')
 
 
 @workflow_cli.command()
