@@ -16,13 +16,13 @@ workflow_cli = AppGroup('workflow')
 @employee_cli.command()
 @click.option('--date', default=datetime.datetime.now())
 def notify_absent(date):
-    notify_absent_employees(date)
+    notify_absent_employees(date, channel='general')
 
 
 @employee_cli.command()
 @click.option('--date', default=datetime.datetime.now().strftime('%Y-%m-%d'))
 def notify_late(date):
-    notify_late_employees(datetime.datetime.strptime(date, '%Y-%m-%d'))
+    notify_late_employees(datetime.datetime.strptime(date, '%Y-%m-%d'), 'general')
 
 
 @workflow_cli.command()

@@ -43,6 +43,7 @@ def get_template(data, title: str):
     return template
 
 
+# TODO: SHOULD check also for comments. I didnt implemented it. Need to find the way how to detect if comment is written
 def check_due_date(jql: str, channel='general'):
     collection = JiraApi().search(jql)
 

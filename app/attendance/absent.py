@@ -28,8 +28,8 @@ def get_template_absent(data: list, date: datetime):
     ]
 
 
-def notify_absent_employees(date: datetime):
+def notify_absent_employees(date: datetime, channel='general'):
     collection = load_employees()
     load_attendance_time(collection, date)
-    Chat().post_message(blocks=get_template_absent(collection.get_absent_employees(), date))
+    Chat().post_message(blocks=get_template_absent(collection.get_absent_employees(), date), channel=channel)
 

@@ -1,7 +1,9 @@
 import datetime
 import json
+
 import requests
 
+from basic.Collection import Collection
 from config import Config
 
 
@@ -74,24 +76,7 @@ class AttendanceUser:
         return self.time
 
 
-class AttendanceCollection:
-    def __init__(self) -> None:
-        super().__init__()
-        self.collection = {}
-
-    def add(self, user: AttendanceUser):
-        self.collection[user.get_id()] = user
-        return self
-
-    def merge(self, collection):
-        self.collection = {**self.collection, **collection.get_collection()}
-
-    def get_collection(self):
-        return self.collection
-
-    def get_length(self):
-        return len(self.collection.items())
-
+class AttendanceCollection(Collection):
     def get_absent_employees(self, date=datetime.datetime.now()) -> list:
         result = []
         for user in self.collection.values():

@@ -36,8 +36,8 @@ def get_template(data: list, date: datetime):
     return template
 
 
-def notify_late_employees(date: datetime):
+def notify_late_employees(date: datetime, channel: str):
     collection = load_employees()
     load_attendance_time(collection, date)
     data = collection.get_late_rate_list(date)
-    Chat().post_message(blocks=get_template(data, date))
+    Chat().post_message(blocks=get_template(data, date), channel=channel)
