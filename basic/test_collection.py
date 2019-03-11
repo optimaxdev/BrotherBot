@@ -14,9 +14,9 @@ class TestCollection(TestCase):
 
     def test_get_collection(self):
         collection = Collection()
-        self.assertEqual({}, collection.get_collection())
+        self.assertEqual({}, dict(collection.get_items()))
         collection.add('1', 'test')
-        self.assertEqual({'1': 'test'}, collection.get_collection())
+        self.assertEqual({'1': 'test'}, dict(collection.get_items()))
 
     def test_get_length(self):
         collection = Collection()
@@ -24,12 +24,12 @@ class TestCollection(TestCase):
         collection.add('1', 'test')
         self.assertEqual(1, collection.get_length())
 
-    def test_get_values(self):
+    def test_get_list(self):
         collection = Collection()
-        self.assertEqual([], list(collection.get_values()))
+        self.assertEqual([], list(collection.get_list()))
         collection.add('1', 'test1')
         collection.add('2', 'test2')
-        self.assertEqual(['test1', 'test2'], list(collection.get_values()))
+        self.assertEqual(['test1', 'test2'], list(collection.get_list()))
 
     def test_merge(self):
         collection1 = Collection()
@@ -39,4 +39,4 @@ class TestCollection(TestCase):
         collection2.add('2', 'test2')
 
         collection1.merge(collection2)
-        self.assertEqual({'1': 'test1', '2': 'test2'}, collection1.get_collection())
+        self.assertEqual({'1': 'test1', '2': 'test2'}, dict(collection1.get_items()))
