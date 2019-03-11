@@ -1,9 +1,8 @@
 import json
-
 import requests
 
-from basic.Collection import Collection
 from config import Config
+from jira.Collections import IssueCollection
 
 
 class JiraProject:
@@ -89,10 +88,6 @@ class JiraIssue:
 
     def get_due_date(self):
         return self.data['fields']['duedate']
-
-
-class IssueCollection(Collection):
-    pass
 
 
 class JiraApi:

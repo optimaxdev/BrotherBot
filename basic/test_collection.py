@@ -40,3 +40,9 @@ class TestCollection(TestCase):
 
         collection1.merge(collection2)
         self.assertEqual({'1': 'test1', '2': 'test2'}, dict(collection1.get_items()))
+
+    def test_get(self):
+        collection = Collection()
+        self.assertEqual(None, collection.get('1'))
+        collection.add('1', 'test1')
+        self.assertEqual('test1', collection.get('1'))

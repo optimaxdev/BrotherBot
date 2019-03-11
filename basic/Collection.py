@@ -18,3 +18,6 @@ class Collection(dict):
     def merge(self, collection):
         for key, value in collection.get_items():
             self.collection[key] = value
+
+    def get(self, key):
+        return self.collection.get(key)
