@@ -2,7 +2,6 @@ import datetime
 from unittest import TestCase
 
 from attendance.Collections import UserCollection
-from attendance.bosscontrol import AttendanceUser
 
 
 class TestUserCollection(TestCase):
