@@ -11,6 +11,7 @@ class Config(object):
     CHAT_SLACK_TOKEN = os.environ.get('CHAT_SLACK_TOKEN') or 'slack-token'
     CHAT_SLACK_ROOM = os.environ.get('CHAT_SLACK_ROOM') or 'pmo_room_without_pmo'
 
+    ATTENDANCE_BOSSCONTROL_HOST = "https://www.bosscontrol.ru/timeattendance/json/"
     ATTENDANCE_BOSSCONTROL_USERNAME = os.environ.get('ATTENDANCE_BOSSCONTROL_USERNAME') or 'bosscontrol-username'
     ATTENDANCE_BOSSCONTROL_PASSWORD = os.environ.get('ATTENDANCE_BOSSCONTROL_PASSWORD') or 'bosscontrol-password'
     ATTENDANCE_DEPARTMENT = [
@@ -24,6 +25,8 @@ class Config(object):
         'bosscontrol_internal_801591',
         'bosscontrol_internal_765085'
     ]
+    ATTENDANCE_WORKING_HOUR_START = 10
+    ATTENDANCE_WORKING_HOUR_FINISH = 19
 
     JIRA_HOST = os.environ.get('JIRA_HOST') or 'http://127.0.0.1'
     JIRA_USERNAME = os.environ.get('JIRA_USERNAME') or 'jira-username'

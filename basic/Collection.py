@@ -1,10 +1,13 @@
+from Object import Object
+
+
 class Collection(dict):
     def __init__(self) -> None:
         super().__init__()
         self.collection = {}
 
-    def add(self, key, value):
-        self.collection[key] = value
+    def add(self, value: Object):
+        self.collection[value.ident] = value
 
     def get_length(self):
         return len(self.collection.items())
