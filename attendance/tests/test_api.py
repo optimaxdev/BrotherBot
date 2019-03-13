@@ -74,7 +74,7 @@ class TestApi(TestCase):
         httpretty.register_uri(
             httpretty.POST,
             Config.ATTENDANCE_BOSSCONTROL_HOST,
-            body="{\"result\": [{\"timestamp\": \"2019-01-01 00:00:00\"}]}"
+            body="{\"result\": [{\"timestamp\": \"2019-01-01 00:00:00\"}, {\"wrong-name\": \"2019-01-01 00:00:00\"}]}"
         )
         self.assertEqual(
             [datetime(2019, 1, 1, 0, 0)],
