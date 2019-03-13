@@ -28,7 +28,13 @@ def get_employee_list_by_department(department_id: str, date: datetime) -> list:
             selected_date
         ]
     })
-    return json.loads(response.text)['result']
+
+    result = []
+    try:
+        result = json.loads(response.text)['result']
+    except Exception:
+        pass
+    return result
 
 
 def get_employee_list() -> list:
@@ -36,6 +42,8 @@ def get_employee_list() -> list:
     for department_id in Config.ATTENDANCE_DEPARTMENT:
         employee_list = get_employee_list_by_department(department_id, datetime.now())
         for employee_data in employee_list:
+            if 'code' not in employee_data.keys():
+                continue
             if employee_data['code'] not in Config.ATTENDANCE_USER_IGNORE:
                 result.append(employee_data)
     return result
@@ -53,7 +61,15 @@ def get_employee_record_by_date(employee_id: str, date: datetime) -> list:
         ]
     })
 
+    time_data = []
+    try:
+        time_data = json.loads(response.text)['result']
+    except Exception:
+        pass
+
     result = []
-    for time in json.loads(response.text)['result']:
+    for time in time_data:
+        if 'timestamp' not in time.keys():
+            continue
         result.append(datetime.strptime(time['timestamp'], '%Y-%m-%d %H:%M:%S'))
     return result
