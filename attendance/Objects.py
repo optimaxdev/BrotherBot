@@ -5,7 +5,7 @@ from Object import Object
 
 
 class AttendanceTime:
-    def __init__(self, user_id: str) -> None:
+    def __init__(self, user_id) -> None:
         super().__init__()
         self.timestamps = []
         self.user_id = user_id
@@ -38,9 +38,9 @@ class AttendanceTime:
 
 class User(Object):
     def __init__(self, **kwargs) -> None:
-        super().__init__()
         self._name = None
         self._discharge_date = None
+        super().__init__(**kwargs)
         self.time = None
         self.update(kwargs)
         del kwargs
@@ -61,8 +61,8 @@ class User(Object):
 
     @discharge_date.setter
     def discharge_date(self, value):
-        if not type(value) == datetime:
-            raise TypeError("discharge_date value type must be datetime")
+        if type(value) != datetime and value is not None:
+            raise TypeError("discharge_date value type must be datetime or None")
         self._discharge_date = value
 
     def is_fired(self):
