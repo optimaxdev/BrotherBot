@@ -1,7 +1,7 @@
 import datetime
 
-from Api import Api
-from Objects import UserObject
+from attendance.Api import Api
+from attendance.Objects import UserObject
 from basic.Collection import Collection
 
 
@@ -21,6 +21,9 @@ class UserCollection(Collection):
 
     def _load_users(self):
         for employee_data in self._api.get_employee_list():
+            for ident, value in employee_data.items():
+                if value == '':
+                    employee_data[ident] = None
             self.add(UserObject(
                 self.api,
                 ident=employee_data['code'],
@@ -29,7 +32,7 @@ class UserCollection(Collection):
             ))
 
     def get_absent_list(self, date: datetime) -> list:
-        return [user for user in self.get_list() if user.time.is_absent(date) and user.is_fired() is False]
+        return [user for user in self.get_list() if user.is_fired() is False and user.time.is_absent(date)]
 
     def get_late_list(self, date: datetime, start_work_hour: int, reverse=True) -> list:
         user_is_late = []

@@ -1,13 +1,14 @@
 import datetime
+from pprint import pprint
 
-from attendance.bosscontrol import load_employees, load_attendance_time
+from attendance.Collections import UserCollection
 from notify.chat import Chat
 
 
 def get_template_absent(data: list, date: datetime):
     fields = []
     for username in data:
-        fields.append({"type": "mrkdwn", "text": "*" + username.get_name() + "*"})
+        fields.append({"type": "mrkdwn", "text": "*" + username.name + "*"})
     date_string = date.strftime("%d.%m.%Y")
     return [
         {
@@ -29,7 +30,6 @@ def get_template_absent(data: list, date: datetime):
 
 
 def notify_absent_employees(date: datetime, channel='general'):
-    collection = load_employees()
-    load_attendance_time(collection, date)
-    Chat().post_message(blocks=get_template_absent(collection.get_absent_employees(), date), channel=channel)
+    collection = UserCollection()
+    Chat().post_message(blocks=get_template_absent(collection.get_absent_list(date), date), channel=channel)
 

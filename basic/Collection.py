@@ -1,4 +1,4 @@
-from Object import Object
+from basic.Object import Object
 
 
 class Collection(dict):

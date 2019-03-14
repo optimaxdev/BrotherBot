@@ -1,6 +1,5 @@
 import datetime
 
-from attendance.bosscontrol import load_employees, load_attendance_time
 from notify.chat import Chat
 
 

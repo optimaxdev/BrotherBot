@@ -1,4 +1,3 @@
-from jira.api import JiraApi, JiraIssue
 from notify.chat import Chat
 
 

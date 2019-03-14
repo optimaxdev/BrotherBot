@@ -90,32 +90,26 @@ class JiraIssue:
         return self.data['fields']['duedate']
 
 
-class JiraApi:
+class Api:
     def __init__(self) -> None:
         super().__init__()
-        self.username = Config().JIRA_USERNAME
-        self.password = Config().JIRA_PASSWORD
+        self.username = Config.JIRA_USERNAME
+        self.password = Config.JIRA_PASSWORD
         self.host = Config.JIRA_HOST
 
-    def create_issue(self, data: dict) -> JiraIssue:
-        issue = JiraIssue(data)
-        issue.set_host(self.host)
-        issue.set_status(JiraStatus(data['fields']['status']))
-        issue.set_project(JiraProject(data['fields']['project']))
-        if data['fields']['assignee'] is not None:
-            issue.set_assignee(JiraUser(data['fields']['assignee']))
-        return JiraIssue(data)
-
-    def search(self, jql: str) -> IssueCollection:
-        collection = IssueCollection()
-
-        response = requests.get('%s/rest/api/2/search' % self.host, params={'jql': jql, 'maxResults': 1000}, auth=(self.username, self.password))
+    def search(self, jql: str) -> list:
+        response = requests.get(
+            '%s/rest/api/2/search' % self.host,
+            params={'jql': jql, 'maxResults': 1000},
+            auth=(self.username, self.password)
+        )
         if not response.ok:
-            return collection
+            return []
 
-        for issue in json.loads(response.text)['issues']:
-            value = self.create_issue(issue)
-            if value.get_id():
-                collection.add(value.get_id(), value)
+        result = []
+        try:
+            result = json.loads(response.text)['issues'].values()
+        except Exception:
+            pass
 
-        return collection
+        return result

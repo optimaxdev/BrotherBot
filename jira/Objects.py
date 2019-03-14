@@ -2,36 +2,39 @@ from basic.Object import Object
 from config import Config
 
 
-class JiraProject(Object):
-    def __init__(self, data=None) -> None:
-        super().__init__()
-        self.data = data
-
-    def get_name(self) -> str:
-        return self.data['name']
-
-
-class JiraStatus(Object):
-    def __init__(self, data: dict) -> None:
-        super().__init__()
-        self.data = data
-
-    def get_id(self):
-        return self.data['id']
-
-    def get_name(self) -> str:
-        return self.data['name']
-
-
-class JiraUser(Object):
+class ProjectObject(Object):
     def __init__(self, **kwargs) -> None:
-        super(JiraUser).__init__(**kwargs)
-        self._email = None
-        self._display_name = None
-        self.update(kwargs)
-        del kwargs
-        self.update(locals())
-        del self.self
+        super().__init__(**kwargs)
+        self._name = kwargs['name']
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+
+class StatusObject(Object):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self._name = kwargs['name']
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+
+class UserObject(Object):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self._email = kwargs['email']
+        self._display_name = kwargs['display_name']
 
     @property
     def email(self):
@@ -50,30 +53,16 @@ class JiraUser(Object):
         self._display_name = value
 
 
-class JiraIssue(Object):
-    def __init__(self, host=Config.JIRA_HOST, **kwargs) -> None:
-        super().__init__()
-        self._host = None
-        self._ident = None
-        self._key = None
-        self._issue_type = None
-        self._summary = None
-        self._due_date = None
-        self._assignee = None
-        self._project = None
-        self._status = None
-        self.update(kwargs)
-        del kwargs
-        self.update(locals())
-        del self.self
-
-    @property
-    def host(self):
-        return self._host
-
-    @host.setter
-    def host(self, value):
-        self._host = value
+class IssueObject(Object):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self._key = kwargs['key']
+        self._issue_type = kwargs['issue_type']
+        self._summary = kwargs['summary']
+        self._due_date = kwargs['due_date'] if 'due_date' in kwargs else None
+        self._assignee = kwargs['assignee'] if 'assignee' in kwargs else None
+        self._project = kwargs['project']
+        self._status = kwargs['status']
 
     @property
     def ident(self):
@@ -117,7 +106,7 @@ class JiraIssue(Object):
 
     @property
     def url(self):
-        return '%s/browse/%s' % (self.host, self.key)
+        return '%s/browse/%s' % (Config.JIRA_HOST, self.key)
 
     @property
     def type(self):

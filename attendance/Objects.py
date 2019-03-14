@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from Api import Api
-from Object import Object
+from attendance.Api import Api
+from basic.Object import Object
 
 
 class AttendanceObject(Object):
@@ -58,8 +58,10 @@ class TimeObject(AttendanceObject):
 class UserObject(AttendanceObject):
     def __init__(self, api: Api, **kwargs) -> None:
         super().__init__(api, **kwargs)
-        self._name = kwargs['name'] if 'name' in kwargs else None
+        self._name = kwargs['name'] if 'discharge_date' in kwargs else None
         self._discharge_date = kwargs['discharge_date'] if 'discharge_date' in kwargs else None
+        if self._discharge_date == '':
+            self._discharge_date = None
         self._time = kwargs['time'] if 'time' in kwargs else None
 
     @property
