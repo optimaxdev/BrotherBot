@@ -34,9 +34,10 @@ class TestUser(TestCase):
 
     def test_get_time(self):
         user = User()
-        self.assertEqual(AttendanceTime, type(user.get_time()))
-        time = user.get_time()
-        self.assertEqual(time, user.get_time())
+        self.assertEqual(AttendanceTime, type(user.time))
+        time = AttendanceTime(1)
+        user.time = time
+        self.assertEqual(time, user.time)
 
     def test_is_fired(self):
         user = User()

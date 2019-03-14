@@ -1,25 +1,43 @@
 from datetime import datetime
 
-from Api import get_employee_record_by_date
+from Api import Api
 from Object import Object
 
 
 class AttendanceTime:
-    def __init__(self, user_id) -> None:
+    def __init__(self, user_id, api=None) -> None:
         super().__init__()
-        self.timestamps = []
-        self.user_id = user_id
+        self._timestamps = []
+        self._user_id = user_id
+        self._api = api
 
-    def load(self, date: datetime) -> None:
-        for time in get_employee_record_by_date(self.user_id, date):
-            self.timestamps.append(time)
-        self.timestamps.sort()
+    @property
+    def user_id(self):
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, value):
+        self._user_id = value
+
+    @property
+    def api(self):
+        if self._api is None:
+            self._api = Api()
+        return self._api
+
+    @api.setter
+    def api(self, value):
+        if type(value) != Api:
+            raise TypeError("api value type must be Api")
+        self._api = value
 
     def get_date_records(self, date: datetime) -> list:
-        records = [time for time in self.timestamps if time.date() == date.date()]
+        records = [time for time in self._timestamps if time.date() == date.date()]
         if len(records) == 0:
-            self.load(date)
-            records = [time for time in self.timestamps if time.date() == date.date()]
+            for time in self.api.get_employee_record_by_date(self.user_id, date):
+                self._timestamps.append(time)
+            self._timestamps.sort()
+            records = [time for time in self._timestamps if time.date() == date.date()]
         return records
 
     def get_first(self, date: datetime) -> datetime:
@@ -38,14 +56,25 @@ class AttendanceTime:
 
 class User(Object):
     def __init__(self, **kwargs) -> None:
-        self._name = None
-        self._discharge_date = None
+        self._name = kwargs['name'] if 'name' in kwargs else None
+        self._discharge_date = kwargs['discharge_date'] if 'discharge_date' in kwargs else None
+        self._time = kwargs['time'] if 'time' in kwargs else None
+        self._api = kwargs['api'] if 'api' in kwargs else None
         super().__init__(**kwargs)
-        self.time = None
         self.update(kwargs)
         del kwargs
         self.update(locals())
         del self.self
+
+    @property
+    def api(self):
+        if self._api is None:
+            self._api = Api()
+        return self._api
+
+    @api.setter
+    def api(self, value):
+        self._api = value
 
     @property
     def name(self):
@@ -65,10 +94,15 @@ class User(Object):
             raise TypeError("discharge_date value type must be datetime or None")
         self._discharge_date = value
 
+    @property
+    def time(self):
+        if self._time is None:
+            self._time = AttendanceTime(self.ident, api=self.api)
+        return self._time
+
+    @time.setter
+    def time(self, value):
+        self._time = value
+
     def is_fired(self):
         return self.discharge_date is not None
-
-    def get_time(self) -> AttendanceTime:
-        if self.time is None:
-            self.time = AttendanceTime(self.ident)
-        return self.time

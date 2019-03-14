@@ -1,8 +1,10 @@
+from datetime import datetime
 from unittest import TestCase
 
 import httpretty as httpretty
 
-from Api import *
+from Api import Api
+from config import Config
 
 
 class TestApi(TestCase):
@@ -10,12 +12,12 @@ class TestApi(TestCase):
     @httpretty.activate
     def test_get_employee_list_by_department_bad_response(self):
         httpretty.register_uri(httpretty.POST, Config.ATTENDANCE_BOSSCONTROL_HOST, body="Bad json string")
-        self.assertEqual([], get_employee_list_by_department('department_test', datetime.now()))
+        self.assertEqual([], Api().get_employee_list_by_department('department_test', datetime.now(), datetime.now()))
 
     @httpretty.activate
     def test_get_employee_list_by_department_no_results(self):
         httpretty.register_uri(httpretty.POST, Config.ATTENDANCE_BOSSCONTROL_HOST, body="{\"no\": \"results\"}")
-        self.assertEqual([], get_employee_list_by_department('department_test', datetime.now()))
+        self.assertEqual([], Api().get_employee_list_by_department('department_test', datetime.now(), datetime.now()))
 
     @httpretty.activate
     def test_get_employee_list_by_department(self):
@@ -24,7 +26,10 @@ class TestApi(TestCase):
             Config.ATTENDANCE_BOSSCONTROL_HOST,
             body="{\"result\": [{\"id\": \"1\"}]}"
         )
-        self.assertEqual([{'id': '1'}], get_employee_list_by_department('department_test', datetime.now()))
+        self.assertEqual(
+            [{'id': '1'}],
+            Api().get_employee_list_by_department('department_test', datetime.now(), datetime.now())
+        )
 
     @httpretty.activate
     def test_get_employee_list_ignore(self):
@@ -35,7 +40,7 @@ class TestApi(TestCase):
         )
         Config.ATTENDANCE_DEPARTMENT = ['only-one']
         Config.ATTENDANCE_USER_IGNORE = ['1']
-        self.assertEqual([], get_employee_list())
+        self.assertEqual([], Api().get_employee_list())
 
     @httpretty.activate
     def test_get_employee_list(self):
@@ -46,7 +51,7 @@ class TestApi(TestCase):
         )
         Config.ATTENDANCE_DEPARTMENT = ['only-one']
         Config.ATTENDANCE_USER_IGNORE = []
-        self.assertEqual([{'code': '1'}], get_employee_list())
+        self.assertEqual([{'code': '1'}], Api().get_employee_list())
 
     @httpretty.activate
     def test_get_employee_list_wrong_format(self):
@@ -57,17 +62,17 @@ class TestApi(TestCase):
         )
         Config.ATTENDANCE_DEPARTMENT = ['only-one']
         Config.ATTENDANCE_USER_IGNORE = []
-        self.assertEqual([], get_employee_list())
+        self.assertEqual([], Api().get_employee_list())
 
     @httpretty.activate
     def test_get_employee_record_by_date_bad_response(self):
         httpretty.register_uri(httpretty.POST, Config.ATTENDANCE_BOSSCONTROL_HOST, body="Bad json string")
-        self.assertEqual([], get_employee_record_by_date('employee_id', datetime.now()))
+        self.assertEqual([], Api().get_employee_record_by_date('employee_id', datetime.now()))
 
     @httpretty.activate
     def test_get_employee_record_by_date_no_results(self):
         httpretty.register_uri(httpretty.POST, Config.ATTENDANCE_BOSSCONTROL_HOST, body="{\"no\": \"results\"}")
-        self.assertEqual([], get_employee_record_by_date('employee_id', datetime.now()))
+        self.assertEqual([], Api().get_employee_record_by_date('employee_id', datetime.now()))
 
     @httpretty.activate
     def test_get_employee_record_by_date(self):
@@ -78,5 +83,5 @@ class TestApi(TestCase):
         )
         self.assertEqual(
             [datetime(2019, 1, 1, 0, 0)],
-            get_employee_record_by_date('employee_id', datetime.now())
+            Api().get_employee_record_by_date('employee_id', datetime.now())
         )

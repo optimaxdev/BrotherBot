@@ -1,11 +1,7 @@
 class Object(object):
     def __init__(self, **kwargs) -> None:
         super().__init__()
-        self._ident = None
-        self.update(kwargs)
-        del kwargs
-        self.update(locals())
-        del self.self
+        self._ident = kwargs['ident'] if 'ident' in kwargs else None
 
     @property
     def ident(self):
