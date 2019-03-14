@@ -1,7 +1,7 @@
 import datetime
 
 from Api import Api
-from Objects import User
+from Objects import UserObject
 from basic.Collection import Collection
 
 
@@ -13,8 +13,6 @@ class UserCollection(Collection):
 
     @property
     def api(self):
-        if self._api is None:
-            self._api = Api()
         return self._api
 
     @api.setter
@@ -23,24 +21,27 @@ class UserCollection(Collection):
 
     def _load_users(self):
         for employee_data in self._api.get_employee_list():
-            self.add(User(
+            self.add(UserObject(
+                self.api,
                 ident=employee_data['code'],
                 name=employee_data['name'],
-                discharge_date=employee_data['discharge_date'] if 'discharge_date' in employee_data else None,
-                api=self.api
+                discharge_date=employee_data['discharge_date'] if 'discharge_date' in employee_data else None
             ))
 
     def get_absent_list(self, date: datetime) -> list:
-        return [user for user in self.get_list() if user.time.is_absent(date)]
+        return [user for user in self.get_list() if user.time.is_absent(date) and user.is_fired() is False]
 
     def get_late_list(self, date: datetime, start_work_hour: int, reverse=True) -> list:
         user_is_late = []
+        work_hour = date.replace(hour=start_work_hour, minute=0, second=0)
 
         for user in self.get_list():
+            if user.is_fired():
+                continue
             time = user.time
             if time.is_absent(date):
                 continue
-            if time.get_first(date).hour >= start_work_hour and time.get_first(date).minute > 0:
+            if time.get_first(date) > work_hour:
                 user_is_late.append(user)
 
         return sorted(user_is_late, key=lambda k: k.time.get_first(date), reverse=reverse)
