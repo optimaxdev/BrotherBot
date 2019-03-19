@@ -1,93 +1,11 @@
 import json
+from datetime import datetime
+
 import requests
 
 from config import Config
 from jira.Collections import IssueCollection
-
-
-class JiraProject:
-    def __init__(self, data=None) -> None:
-        super().__init__()
-        self.data = data
-
-    def get_name(self):
-        return self.data['name']
-
-
-class JiraStatus:
-    def __init__(self, data: dict) -> None:
-        super().__init__()
-        self.data = data
-
-    def get_id(self):
-        return self.data['id']
-
-    def get_name(self):
-        return self.data['name']
-
-
-class JiraUser:
-    def __init__(self, data: dict) -> None:
-        super().__init__()
-        self.data = data
-
-    def get_id(self):
-        return self.data['key']
-
-    def get_email(self):
-        return self.data['emailAddress']
-
-    def get_display_name(self):
-        return self.data['displayName']
-
-
-class JiraIssue:
-    def __init__(self, data: dict) -> None:
-        super().__init__()
-        self.host = None
-        self.data = data
-        self.assignee = None
-        self.project = None
-        self.status = None
-
-    def set_host(self, host: str):
-        self.host = host
-
-    def get_id(self):
-        return self.data['id']
-
-    def get_key(self):
-        return self.data['key']
-
-    def get_status(self) -> JiraStatus:
-        return self.status
-
-    def set_status(self, status: JiraStatus):
-        self.status = status
-
-    def get_assignee(self) -> JiraUser:
-        return self.assignee
-
-    def set_assignee(self, user: JiraUser):
-        self.assignee = user
-
-    def get_project(self) -> JiraProject:
-        return self.project
-
-    def set_project(self, project: JiraProject):
-        self.project = project
-
-    def get_url(self):
-        return '%s/browse/%s' % (Config.JIRA_HOST, self.get_key())
-
-    def get_type(self):
-        return self.data['fields']['issuetype']['name']
-
-    def get_summary(self):
-        return self.data['fields']['summary']
-
-    def get_due_date(self):
-        return self.data['fields']['duedate']
+from jira.Objects import IssueObject, StatusObject, ProjectObject, UserObject
 
 
 class Api:
@@ -97,19 +15,75 @@ class Api:
         self.password = Config.JIRA_PASSWORD
         self.host = Config.JIRA_HOST
 
-    def search(self, jql: str) -> list:
+    def _make_get(self, url: str, params):
         response = requests.get(
-            '%s/rest/api/2/search' % self.host,
-            params={'jql': jql, 'maxResults': 1000},
+            '%s%s' % (self.host, url),
+            params=params,
             auth=(self.username, self.password)
         )
         if not response.ok:
-            return []
+            return {}
 
-        result = []
+        data = {}
         try:
-            result = json.loads(response.text)['issues'].values()
+            data = json.loads(response.text)
         except Exception:
             pass
 
+        return data
+
+    def _create_datetime(self, date, format='%Y-%m-%d %H:%M:%S'):
+        result = None
+        try:
+            result = datetime.strptime(date, format)
+        except ValueError:
+            if format != '%Y-%m-%d':
+                result = self._create_datetime(date, '%Y-%m-%d')
+        except TypeError:
+            pass
         return result
+
+    def _create_project(self, data: dict) -> ProjectObject:
+        return ProjectObject(
+            ident=data['id'],
+            name=data['name']
+        )
+
+    def _create_status(self, data: dict) -> StatusObject:
+        return StatusObject(
+            ident=data['id'],
+            name=data['name']
+        )
+
+    def _create_user(self, data) -> UserObject:
+        user = UserObject()
+        if data is None:
+            return user
+        user.ident = data['key']
+        user.display_name = data['displayName']
+        user.email = data['emailAddress']
+        return user
+
+    def search(self, jql: str) -> IssueCollection:
+        collection = IssueCollection()
+
+        issue_data_list = []
+        try:
+            issue_data_list = self._make_get('/rest/api/2/search', {'jql': jql, 'maxResults': 1000})['issues']
+        except Exception:
+            pass
+
+        for item in issue_data_list:
+            issue = IssueObject(
+                ident=item['id'],
+                key=item['key'],
+                summary=item['fields']['summary'],
+                issue_type=item['fields']['issuetype']['name'],
+                due_date=self._create_datetime(item['fields']['duedate']),
+                assignee=self._create_user(item['fields']['assignee']),
+                project=self._create_project(item['fields']['project']),
+                status=self._create_status(item['fields']['status'])
+            )
+            collection.add(issue)
+
+        return collection

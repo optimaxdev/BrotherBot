@@ -1,3 +1,4 @@
+from jira.Api import Api
 from notify.chat import Chat
 
 
@@ -15,13 +16,13 @@ def get_template(data):
         }
     ]
 
-    for issue in data.values():
+    for issue in data.get_list():
         text = "• *<%s|%s>* %s | %s in _%s_" % (
-            issue.get_url(),
-            issue.get_key(),
-            issue.get_summary(),
-            issue.get_type(),
-            issue.get_status().get_name()
+            issue.url,
+            issue.key,
+            issue.summary,
+            issue.type,
+            issue.status.name
         )
         template.append({
             "type": "section",
@@ -33,6 +34,11 @@ def get_template(data):
     return template
 
 
-def check_no_assignee(jql: str):
-    collection = JiraApi().search(jql)
-    Chat().post_message(channel='leads', blocks=get_template(collection.get_collection()))
+def check_no_assignee(jql: str, channel='leads'):
+    collection = Api().search(jql)
+    if collection.get_length() == 0:
+        return
+    Chat().post_message(
+        channel=channel,
+        blocks=get_template(collection)
+    )

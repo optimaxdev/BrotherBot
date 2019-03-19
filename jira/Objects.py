@@ -2,30 +2,37 @@ from basic.Object import Object
 from config import Config
 
 
-class JiraProject(Object):
-    def __init__(self, data=None) -> None:
-        super().__init__()
-        self.data = data
-
-    def get_name(self) -> str:
-        return self.data['name']
-
-
-class JiraStatus(Object):
-    def __init__(self, data: dict) -> None:
-        super().__init__()
-        self.data = data
-
-    def get_id(self):
-        return self.data['id']
-
-    def get_name(self) -> str:
-        return self.data['name']
-
-
-class JiraUser(Object):
+class ProjectObject(Object):
     def __init__(self, **kwargs) -> None:
-        super(JiraUser).__init__(**kwargs)
+        super().__init__(**kwargs)
+        self._name = kwargs['name']
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+
+class StatusObject(Object):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self._name = kwargs['name']
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+
+class UserObject(Object):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
         self._email = None
         self._display_name = None
 

@@ -38,6 +38,7 @@ def notify_late(date, channel):
 
 
 @workflow_cli.command()
+@click.option('--channel', default='leads')
 def validate_single_status():
     check_single_status('project in (UVP, BAC, BUG, GRO, ANT, GD, OPT, OT) AND issuetype in (Bug, Improvement, '
                         '"New Feature", QA, Story, Task) AND status in ("In Progress", Testing, "Code Review", '
@@ -51,31 +52,34 @@ def validate_single_status():
 
 
 @workflow_cli.command()
-def validate_no_assignee():
+@click.option('--channel', default='leads')
+def validate_no_assignee(channel):
     check_no_assignee('status in ("In Progress", Testing, "Code Review", "In Development", "Create Checklist", '
-                      '"Write Test Cases") AND assignee in (EMPTY) ')
+                      '"Write Test Cases") AND assignee in (EMPTY)', channel=channel)
 
 
 @workflow_cli.command()
+@click.option('--channel', default='leads')
 def validate_due_date():
     check_due_date('project in (OT, UVP) AND status in ("In Progress", '
                    'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'ottica')
+                   'EMPTY )', 'ottica', channel=channel)
     check_due_date('project in (GRO, BUG) AND status in ("In Progress", '
                    'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'growth')
+                   'EMPTY )', 'growth', channel=channel)
     check_due_date('project in (ANT) AND status in ("In Progress", '
                    'Testing, "Code Review", "Create Checklist", "Write Test Cases", "In Development") AND (due <= '
                    '"0" OR due is EMPTY )', 'analytics-team')
     check_due_date('project in (GD) AND status in ("In Progress", '
                    'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'devops')
+                   'EMPTY )', 'devops', channel=channel)
     check_due_date('project in (BAC) AND status in ("In Progress", '
                    'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
                    'EMPTY )', 'backend_team')
     check_due_date('project in (GUSA, OPT) AND status in ("In Progress", '
                    'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'general')
+                   'EMPTY )', 'general', channel=channel)
+
 
 
 app.cli.add_command(employee_cli)
