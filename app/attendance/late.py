@@ -24,8 +24,8 @@ def get_template(data: list, date: datetime):
                 "text": {
                     "type": "mrkdwn",
                     "text": "*%s* появился в %s" % (
-                        user.get_name(),
-                        user.get_time().get_first(date).strftime("%H:%M")
+                        user.name,
+                        user.time.get_first(date).strftime("%H:%M")
                     )
                 }
             }
@@ -40,6 +40,6 @@ def get_template(data: list, date: datetime):
 def notify_late_employees(date: datetime, channel: str):
     collection = UserCollection()
     Chat().post_message(
-        blocks=get_template(collection.get_late_list(date, Config.ATTENDANCE_WORKING_HOUR_START, False), date),
+        blocks=get_template(collection.get_late_list(date, Config.ATTENDANCE_WORKING_HOUR_START, True), date),
         channel=channel
     )

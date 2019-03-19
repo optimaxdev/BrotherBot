@@ -36,7 +36,7 @@ class UserCollection(Collection):
 
     def get_late_list(self, date: datetime, start_work_hour: int, reverse=True) -> list:
         user_is_late = []
-        work_hour = date.replace(hour=start_work_hour, minute=0, second=0)
+        work_hour = date.replace(hour=start_work_hour, minute=0, second=1)
 
         for user in self.get_list():
             if user.is_fired():
