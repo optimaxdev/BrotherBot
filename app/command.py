@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import click
 from flask.cli import AppGroup
 
@@ -13,21 +13,28 @@ employee_cli = AppGroup('employee')
 workflow_cli = AppGroup('workflow')
 
 
+def get_date(date):
+    result = datetime.now()
+    try:
+        if type(date) == str:
+            result = datetime.strptime(date, '%Y-%m-%d')
+    except Exception:
+        pass
+    return result
+
+
 @employee_cli.command()
-@click.option('--date', default=datetime.datetime.now())
+@click.option('--date', default=datetime.now())
 @click.option('--channel', default='general')
 def notify_absent(date, channel):
-    if type(date) == str:
-        date = datetime.datetime.strptime(date, '%Y-%m-%d')
-    notify_absent_employees(date, channel=channel)
+    notify_absent_employees(get_date(date), channel=channel)
 
 
 @employee_cli.command()
-@click.option('--date', default=datetime.datetime.now().strftime('%Y-%m-%d'))
-def notify_late(date):
-    if type(date) == str:
-        date = datetime.datetime.strptime(date, '%Y-%m-%d')
-    notify_late_employees(datetime.datetime.strptime(date, '%Y-%m-%d'), 'general')
+@click.option('--date', default=datetime.now().strftime('%Y-%m-%d'))
+@click.option('--channel', default='general')
+def notify_late(date, channel):
+    notify_late_employees(get_date(date), channel)
 
 
 @workflow_cli.command()

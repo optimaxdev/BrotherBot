@@ -1,5 +1,7 @@
-import datetime
+from datetime import datetime
 
+from attendance.Collections import UserCollection
+from config import Config
 from notify.chat import Chat
 
 
@@ -23,7 +25,7 @@ def get_template(data: list, date: datetime):
                     "type": "mrkdwn",
                     "text": "*%s* появился в %s" % (
                         user.get_name(),
-                        user.get_attendance().get_first(date).strftime("%H:%M")
+                        user.get_time().get_first(date).strftime("%H:%M")
                     )
                 }
             }
@@ -36,7 +38,8 @@ def get_template(data: list, date: datetime):
 
 
 def notify_late_employees(date: datetime, channel: str):
-    collection = load_employees()
-    load_attendance_time(collection, date)
-    data = collection.get_late_rate_list(date)
-    Chat().post_message(blocks=get_template(data, date), channel=channel)
+    collection = UserCollection()
+    Chat().post_message(
+        blocks=get_template(collection.get_late_list(date, Config.ATTENDANCE_WORKING_HOUR_START, False), date),
+        channel=channel
+    )
