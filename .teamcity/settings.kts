@@ -24,7 +24,7 @@ object Build : BuildType({
         script {
             name = "pip install"
             dockerImage = "python:3.6"
-            scriptContent = "pip install --user -r requirements.txt"
+            scriptContent = "pip install -r requirements.txt"
         }
         script {
             name = "py tests"
