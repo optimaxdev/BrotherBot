@@ -46,19 +46,13 @@ class TestApi(TestCase):
         self.assertEqual(None, item.email)
 
     @httpretty.activate
-    def test__make_get_wrong_data(self):
-        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/test', body="Bad json string")
-        self.assertEqual({}, Api()._make_get('/test', {}))
-
-    @httpretty.activate
-    def test__make_get_reponse_not_ok(self):
-        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/test', body="Bad json string", status=500)
-        self.assertEqual({}, Api()._make_get('/test', {}))
-
-    @httpretty.activate
     def test__make_get(self):
-        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/test', body="[1, 2, {\"a\": 1}]")
-        self.assertEqual([1, 2, {'a': 1}], Api()._make_get('/test', {}))
+        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/bad-json', body="Bad json string")
+        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/error', body="Bad json string", status=500)
+        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/data', body="[1, 2, {\"a\": 1}]")
+        self.assertEqual({}, Api()._make_get('/bad-json', {}))
+        self.assertEqual({}, Api()._make_get('/error', {}))
+        self.assertEqual([1, 2, {'a': 1}], Api()._make_get('/data', {}))
 
     def test_search_false_data(self):
         api = Api()
