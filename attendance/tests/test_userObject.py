@@ -24,6 +24,8 @@ class TestUser(TestCase):
         self.assertEqual(datetime(2019, 1, 1), user.discharge_date)
         user.discharge_date = None
         self.assertEqual(None, user.discharge_date)
+        user.discharge_date = ''
+        self.assertEqual(None, user.discharge_date)
 
     def test_discharge_date_wrong_type(self):
         user = UserObject(Api())

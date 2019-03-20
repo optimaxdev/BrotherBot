@@ -58,11 +58,9 @@ class TimeObject(AttendanceObject):
 class UserObject(AttendanceObject):
     def __init__(self, api: Api, **kwargs) -> None:
         super().__init__(api, **kwargs)
-        self._name = kwargs['name'] if 'discharge_date' in kwargs else None
-        self._discharge_date = kwargs['discharge_date'] if 'discharge_date' in kwargs else None
-        if self._discharge_date == '':
-            self._discharge_date = None
-        self._time = kwargs['time'] if 'time' in kwargs else None
+        self.name = kwargs['name'] if 'discharge_date' in kwargs else None
+        self.discharge_date = kwargs['discharge_date'] if 'discharge_date' in kwargs else None
+        self.time = kwargs['time'] if 'time' in kwargs else None
 
     @property
     def name(self):
@@ -78,6 +76,8 @@ class UserObject(AttendanceObject):
 
     @discharge_date.setter
     def discharge_date(self, value):
+        if value == '':
+            value = None
         if type(value) != datetime and value is not None:
             raise TypeError("discharge_date value type must be datetime or None")
         self._discharge_date = value
@@ -90,7 +90,7 @@ class UserObject(AttendanceObject):
 
     @time.setter
     def time(self, value):
-        if type(value) != TimeObject:
+        if type(value) != TimeObject and value is not None:
             raise TypeError("time value type must be TimeObject")
         self._time = value
 

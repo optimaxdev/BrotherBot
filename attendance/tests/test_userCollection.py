@@ -38,7 +38,8 @@ class TestUserCollection(TestCase):
             return_value=[
                 {
                     'code': 'test1',
-                    'name': 'name1'
+                    'name': 'name1',
+                    'discharge_date': ''
                 },
                 {
                     'code': 'test2',
