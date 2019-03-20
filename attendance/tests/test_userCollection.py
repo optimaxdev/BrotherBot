@@ -15,7 +15,8 @@ class TestUserCollection(TestCase):
                     datetime(2019, 1, 1, 10, 9, 59),
                     datetime(2019, 1, 1, 10, 0, 0),
                     datetime(2019, 1, 1, 10, 0, 1),
-                    datetime(2019, 1, 2, 10, 0, 2)
+                    datetime(2019, 1, 2, 10, 0, 2),
+                    datetime(2019, 1, 2, 10, 0, 1)
                 ]
             if employee_id == 'test2':
                 return [
@@ -84,6 +85,6 @@ class TestUserCollection(TestCase):
             [user.ident for user in collection.get_late_list(datetime(2019, 1, 1, 1, 1, 1), 10, True)]
         )
         self.assertEqual(
-            ['test3', 'test1'],
+            ['test1', 'test3'],
             [user.ident for user in collection.get_late_list(datetime(2019, 1, 2, 1, 1, 1), 10, False)]
         )
