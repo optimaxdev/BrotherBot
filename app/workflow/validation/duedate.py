@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from jira.Api import Api
 from notify.chat import Chat
 
 
@@ -15,7 +16,7 @@ def get_template(data, title: str):
     ]
 
     for issue_list in data.values():
-        user_name = issue_list[0].get_assignee().get_display_name()
+        user_name = issue_list[0].assignee.display_name
         template.append({"type": "divider"})
         template.append({
             "type": "section",
@@ -26,11 +27,11 @@ def get_template(data, title: str):
         })
         for issue in issue_list:
             text = "• *<%s|%s>* %s | %s in _%s_" % (
-                issue.get_url(),
-                issue.get_key(),
-                issue.get_summary(),
-                issue.get_type(),
-                issue.get_status().get_name()
+                issue.url,
+                issue.key,
+                issue.summary,
+                issue.type,
+                issue.status.name
             )
             template.append({
                 "type": "section",
@@ -44,21 +45,21 @@ def get_template(data, title: str):
 
 # TODO: SHOULD check also for comments. I didnt implemented it. Need to find the way how to detect if comment is written
 def check_due_date(jql: str, channel='general'):
-    collection = JiraApi().search(jql)
+    collection = Api().search(jql)
 
     error_empty_date = {}
     error_date_outdated = {}
 
-    for issue in collection.get_collection().values():
-        if issue.get_assignee() is None:
+    for issue in collection.get_list():
+        if issue.assignee is None:
             continue
-        user_id = issue.get_assignee().get_id()
-        if issue.get_due_date() is None:
+        user_id = issue.assignee.ident
+        if issue.due_date is None:
             if not error_empty_date.get(user_id):
                 error_empty_date[user_id] = []
             error_empty_date[user_id].append(issue)
             continue
-        if datetime.strptime(issue.get_due_date(), '%Y-%m-%d').date() <= datetime.now().date():
+        if issue.due_date.date() <= datetime.now().date():
             if not error_date_outdated.get(user_id):
                 error_date_outdated[user_id] = []
             error_date_outdated[user_id].append(issue)

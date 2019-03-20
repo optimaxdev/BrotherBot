@@ -53,26 +53,10 @@ def validate_no_assignee(channel):
 
 
 @workflow_cli.command()
-@click.option('--channel', default='leads')
-def validate_due_date():
-    check_due_date('project in (OT, UVP) AND status in ("In Progress", '
-                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'ottica', channel=channel)
-    check_due_date('project in (GRO, BUG) AND status in ("In Progress", '
-                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'growth', channel=channel)
-    check_due_date('project in (ANT) AND status in ("In Progress", '
-                   'Testing, "Code Review", "Create Checklist", "Write Test Cases", "In Development") AND (due <= '
-                   '"0" OR due is EMPTY )', 'analytics-team')
-    check_due_date('project in (GD) AND status in ("In Progress", '
-                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'devops', channel=channel)
-    check_due_date('project in (BAC) AND status in ("In Progress", '
-                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'backend_team')
-    check_due_date('project in (GUSA, OPT) AND status in ("In Progress", '
-                   'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
-                   'EMPTY )', 'general', channel=channel)
+@click.option('--channel', default=None)
+def validate_due_date(channel):
+    for item in Config.VALIDATOR_DUE_DATE:
+        check_due_date(item['jql'], channel=item['channel'] if channel is None else channel)
 
 
 app.cli.add_command(employee_cli)

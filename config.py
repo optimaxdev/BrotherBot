@@ -89,3 +89,32 @@ class Config(object):
                    'Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") '
         }
     ]
+
+    VALIDATOR_DUE_DATE = [
+        {
+            'channel': 'general',
+            'jql': 'project in (GUSA, OPT) AND status in ("In Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is EMPTY)'
+        },
+        {
+            'channel': 'backend_team',
+            'jql': 'project in (BAC) AND status in ("In Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is EMPTY)'
+        },
+        {
+            'channel': 'devops',
+            'jql': 'project in (GD) AND status in ("In Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is EMPTY)'
+        },
+        {
+            'channel': 'analytics-team',
+            'jql': 'project in (ANT) AND status in ("In Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases", "In Development") AND (due <= "0" OR due is EMPTY)'
+        }
+        ,
+        {
+            'channel': 'growth',
+            'jql': 'project in (GRO, BUG) AND status in ("In Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is EMPTY)'
+        }
+        ,
+        {
+            'channel': 'ottica',
+            'jql': 'project in (OT, UVP) AND status in ("In Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is EMPTY)'
+        }
+    ]
