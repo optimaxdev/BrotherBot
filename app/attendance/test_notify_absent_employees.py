@@ -1,9 +1,14 @@
 from datetime import datetime
 from unittest import TestCase
 
-from app.attendance.late import notify_late_employees
+from app.workflow.validation.singlestatus import check_single_status
 
 
 class TestNotify_absent_employees(TestCase):
     def test_notify_absent_employees(self):
-        notify_late_employees(datetime(2019, 3, 19), channel='pmo_room_without_pmo')
+        check_single_status(
+            'project in (UVP, BAC, BUG, GRO, ANT, GD, OPT, OT) AND issuetype in (Bug, Improvement, '
+            '"New Feature", QA, Story, Task) AND status in ("In Progress", Testing, "Code Review", '
+            '"Create Checklist", "Write Test Cases")',
+            channel='pmo_room_without_pmo'
+        )

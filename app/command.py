@@ -8,6 +8,7 @@ from app.attendance.late import notify_late_employees
 from app.workflow.validation.duedate import check_due_date
 from app.workflow.validation.noassignee import check_no_assignee
 from app.workflow.validation.singlestatus import check_single_status
+from config import Config
 
 employee_cli = AppGroup('employee')
 workflow_cli = AppGroup('workflow')
@@ -38,24 +39,17 @@ def notify_late(date, channel):
 
 
 @workflow_cli.command()
-@click.option('--channel', default='leads')
-def validate_single_status():
-    check_single_status('project in (UVP, BAC, BUG, GRO, ANT, GD, OPT, OT) AND issuetype in (Bug, Improvement, '
-                        '"New Feature", QA, Story, Task) AND status in ("In Progress", Testing, "Code Review", '
-                        '"Create Checklist", "Write Test Cases")', channel='general')
-    check_single_status('project in (GUSA, Bugtracker) AND Sprint = "Rebels" AND  issuetype in (Bug, Improvement, '
-                        '"New Feature", QA, Task) AND status in ("In Progress", Testing, "Code Review", '
-                        '"Create Checklist", "Write Test Cases")', channel='rebels')
-    check_single_status('project in (GUSA, Bugtracker) AND Sprint = "D.E.H.T.A." AND  issuetype in (Bug, Improvement, '
-                        '"New Feature", QA, Task) AND status in ("In Progress", Testing, "Code Review", '
-                        '"Create Checklist", "Write Test Cases")', channel='dehta')
+@click.option('--channel', default=None)
+def validate_single_status(channel):
+    for item in Config.VALIDATOR_SINGLE_STATUS:
+        check_single_status(item['jql'], channel=item['channel'] if channel is None else channel)
 
 
 @workflow_cli.command()
-@click.option('--channel', default='leads')
+@click.option('--channel', default=None)
 def validate_no_assignee(channel):
-    check_no_assignee('status in ("In Progress", Testing, "Code Review", "In Development", "Create Checklist", '
-                      '"Write Test Cases") AND assignee in (EMPTY)', channel=channel)
+    for item in Config.VALIDATOR_NO_ASSIGNEE:
+        check_no_assignee(item['jql'], channel=item['channel'] if channel is None else channel)
 
 
 @workflow_cli.command()
@@ -79,7 +73,6 @@ def validate_due_date():
     check_due_date('project in (GUSA, OPT) AND status in ("In Progress", '
                    'Testing, "Code Review", "Create Checklist", "Write Test Cases") AND (due <= "0" OR due is '
                    'EMPTY )', 'general', channel=channel)
-
 
 
 app.cli.add_command(employee_cli)

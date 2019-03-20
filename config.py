@@ -31,3 +31,61 @@ class Config(object):
     JIRA_HOST = os.environ.get('JIRA_HOST') or 'http://127.0.0.1'
     JIRA_USERNAME = os.environ.get('JIRA_USERNAME') or 'jira-username'
     JIRA_PASSWORD = os.environ.get('JIRA_PASSWORD') or 'jira-password'
+
+    VALIDATOR_NO_ASSIGNEE = [
+        {
+            'channel': 'leads',
+            'jql': 'status in ("In Progress", Testing, "Code Review", "In Development", "Create Checklist", '
+                   '"Write Test Cases") AND assignee in (EMPTY) '
+        }
+    ]
+
+    VALIDATOR_SINGLE_STATUS = [
+        {
+            'channel': 'leads',
+            'jql': 'project in (BAC, GUSA, GRO, SUP, OPT, ANT, BUG, GD, WIN, OT, UVP) AND issuetype in (Bug, Improvement, '
+                   '"New Feature", QA, Story, Task) AND status in ("In Progress", Testing, "Code Review", '
+                   '"Create Checklist", "Write Test Cases")'
+        },
+        {
+            'channel': 'leads',
+            'jql': 'project = WIN AND status in ("In Progress")'
+        },
+        {
+            'channel': 'rebels',
+            'jql': 'project in (GUSA, BUG) AND Sprint = "Rebels" AND  issuetype in (Bug, Improvement, '
+                   '"New Feature", QA, Task) AND status in ("In Progress", Testing, "Code Review", '
+                   '"Create Checklist", "Write Test Cases")'
+        },
+        {
+            'channel': 'dehta',
+            'jql': 'project in (GUSA, BUG) AND Sprint = "D.E.H.T.A." AND  issuetype in (Bug, Improvement, '
+                   '"New Feature", QA, Task) AND status in ("In Progress", Testing, "Code Review", '
+                   '"Create Checklist", "Write Test Cases")'
+        },
+        {
+            'channel': 'backend_team',
+            'jql': 'project in (BAC, BUG) AND issuetype in (Bug, Improvement, "New Feature", QA, Task) AND status in ("In '
+                   'Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") '
+        },
+        {
+            'channel': 'ottica',
+            'jql': 'project in (UVP, OT, BUG) AND issuetype in (Bug, Improvement, "New Feature", QA, Task) AND status in ("In '
+                   'Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") '
+        },
+        {
+            'channel': 'devops',
+            'jql': 'project in (GD, SUP) AND issuetype in (Bug, Improvement, "New Feature", QA, Story, Task) AND status in ('
+                   '"In Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") '
+        },
+        {
+            'channel': 'analytics-team',
+            'jql': 'project in (ANT, BUG) AND issuetype in (Bug, Improvement, "New Feature", QA, Task) AND status in ("In '
+                   'Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") '
+        },
+        {
+            'channel': 'growth',
+            'jql': 'project in (GRO, BUG) AND issuetype in (Bug, Improvement, "New Feature", QA, Task) AND status in ("In '
+                   'Progress", Testing, "Code Review", "Create Checklist", "Write Test Cases") '
+        }
+    ]
