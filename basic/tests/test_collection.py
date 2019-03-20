@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from Object import Object
+from basic.Object import Object
 from basic.Collection import Collection
 
 
