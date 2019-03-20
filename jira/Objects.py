@@ -5,7 +5,7 @@ from config import Config
 class ProjectObject(Object):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self._name = kwargs['name']
+        self.name = kwargs['name']
 
     @property
     def name(self):
@@ -19,7 +19,7 @@ class ProjectObject(Object):
 class StatusObject(Object):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self._name = kwargs['name']
+        self.name = kwargs['name']
 
     @property
     def name(self):
@@ -33,8 +33,8 @@ class StatusObject(Object):
 class UserObject(Object):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self._email = None
-        self._display_name = None
+        self.email = kwargs['email'] if 'email' in kwargs else None
+        self.display_name = kwargs['display_name'] if 'display_name' in kwargs else None
 
     @property
     def email(self):
@@ -56,21 +56,14 @@ class UserObject(Object):
 class IssueObject(Object):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self._key = kwargs['key']
-        self._issue_type = kwargs['issue_type']
-        self._summary = kwargs['summary']
-        self._due_date = kwargs['due_date'] if 'due_date' in kwargs else None
-        self._assignee = kwargs['assignee'] if 'assignee' in kwargs else None
-        self._project = kwargs['project']
-        self._status = kwargs['status']
-
-    @property
-    def ident(self):
-        return self._ident
-
-    @ident.setter
-    def ident(self, value):
-        self._ident = value
+        self.key = kwargs['key']
+        self.type = kwargs['type']
+        self.summary = kwargs['summary']
+        self.due_date = kwargs['due_date'] if 'due_date' in kwargs else None
+        self.assignee = kwargs['assignee'] if 'assignee' in kwargs else None
+        self.project = kwargs['project']
+        self.status = kwargs['status']
+        self.host = kwargs['host'] if 'host' in kwargs else Config.JIRA_HOST
 
     @property
     def key(self):
@@ -79,6 +72,22 @@ class IssueObject(Object):
     @key.setter
     def key(self, value):
         self._key = value
+
+    @property
+    def type(self):
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        self._type = value
+
+    @property
+    def host(self):
+        return self._host
+
+    @host.setter
+    def host(self, value):
+        self._host = value
 
     @property
     def status(self):
@@ -106,15 +115,7 @@ class IssueObject(Object):
 
     @property
     def url(self):
-        return '%s/browse/%s' % (Config.JIRA_HOST, self.key)
-
-    @property
-    def type(self):
-        return self._issue_type
-
-    @type.setter
-    def type(self, value):
-        self._issue_type = value
+        return '%s/browse/%s' % (self.host, self.key)
 
     @property
     def summary(self):

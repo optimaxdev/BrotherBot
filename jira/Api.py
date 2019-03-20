@@ -15,7 +15,7 @@ class Api:
         self.password = Config.JIRA_PASSWORD
         self.host = Config.JIRA_HOST
 
-    def _make_get(self, url: str, params):
+    def _make_get(self, url: str, params) -> dict:
         response = requests.get(
             '%s%s' % (self.host, url),
             params=params,
@@ -78,7 +78,7 @@ class Api:
                 ident=item['id'],
                 key=item['key'],
                 summary=item['fields']['summary'],
-                issue_type=item['fields']['issuetype']['name'],
+                type=item['fields']['issuetype']['name'],
                 due_date=self._create_datetime(item['fields']['duedate']),
                 assignee=self._create_user(item['fields']['assignee']),
                 project=self._create_project(item['fields']['project']),
