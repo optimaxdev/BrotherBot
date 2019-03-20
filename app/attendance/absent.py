@@ -1,5 +1,4 @@
 import datetime
-from pprint import pprint
 
 from attendance.Collections import UserCollection
 from notify.chat import Chat
