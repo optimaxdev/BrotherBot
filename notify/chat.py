@@ -16,8 +16,9 @@ class Chat:
             params['channel'] = channel
         if message is not None:
             params['text'] = message
-        if blocks is not None:
-            params['blocks'] = blocks
+        else:
+            if blocks is not None:
+                params['blocks'] = blocks
 
         response = requests.post(
             "https://slack.com/api/chat.postMessage",
@@ -27,4 +28,5 @@ class Chat:
                 'Authorization': 'Bearer %s' % self.token
             }
         )
+
         return json.loads(response.text)['ok'] is True
