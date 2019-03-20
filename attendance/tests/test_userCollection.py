@@ -18,11 +18,6 @@ class TestUserCollection(TestCase):
                     datetime(2019, 1, 2, 10, 0, 2),
                     datetime(2019, 1, 2, 10, 0, 1)
                 ]
-            if employee_id == 'test2':
-                return [
-                    datetime(2019, 1, 1, 10, 0, 1),
-                    datetime(2019, 1, 2, 10, 0, 2),
-                ]
             if employee_id == 'test3':
                 return [
                     datetime(2019, 1, 2, 10, 0, 1)
