@@ -1,8 +1,8 @@
 from datetime import datetime
 from unittest import TestCase
 
-from Api import Api
-from Objects import TimeObject, UserObject
+from attendance.Api import Api
+from attendance.Objects import TimeObject, UserObject
 
 
 class TestUser(TestCase):

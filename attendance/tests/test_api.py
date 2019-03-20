@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import httpretty as httpretty
 
-from Api import Api
+from attendance.Api import Api
 from config import Config
 
 

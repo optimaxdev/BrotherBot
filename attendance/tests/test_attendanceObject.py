@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from Api import Api
-from Objects import AttendanceObject
+from attendance.Api import Api
+from attendance.Objects import AttendanceObject
 
 
 class TestAttendanceObject(TestCase):
