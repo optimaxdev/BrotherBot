@@ -63,7 +63,7 @@ object Deploy : BuildType({
             }
 
             artifacts {
-                artifactRules = "%build.counter%.brother.tar.gz => ./"
+                artifactRules = "%dep.OPT_MS_TestsAndBuilds_Office_BrotherBot_Build.build.counter%.brother.tar.gz => ./"
             }
         }
     }
