@@ -12,10 +12,10 @@ accordingly, and delete the patch script.
 changeProject(DslContext.projectId) {
     params {
         add {
-            param("deploy_code", """
+            text("deploy_code", """
                 #!/bin/bash
                 echo "test"
-            """.trimIndent())
+            """.trimIndent(), display = ParameterDisplay.HIDDEN, allowEmpty = true)
         }
     }
 }
