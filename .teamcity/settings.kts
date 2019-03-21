@@ -23,9 +23,9 @@ object Build : BuildType({
     triggers {
         vcs {
             branchFilter = """
-        +:*
-        +:refs/tags/*
-    """.trimIndent()
+            +:refs/heads/*
+            +:refs/tags/*
+            """.trimIndent()
         }
     }
     steps {
