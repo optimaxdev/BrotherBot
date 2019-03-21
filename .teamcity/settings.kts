@@ -20,6 +20,10 @@ object Build : BuildType({
 
     triggers {
         vcs {
+            branchFilter = """
+        +:*
+        +:refs/tags/*
+    """.trimIndent()
         }
     }
     steps {
@@ -45,14 +49,23 @@ object Deploy : BuildType({
             type = "ssh-deploy-runner"
             param("jetbrains.buildServer.deployer.username", "optimax")
             param("teamcitySshKey", "Common")
-            param("jetbrains.buildServer.deployer.sourcePath", "%build.counter%.brother.tar.gz => ~/upload/")
+            param("jetbrains.buildServer.deployer.sourcePath", "%dep.OPT_MS_TestsAndBuilds_Office_BrotherBot_Build.build.counter%.brother.tar.gz => ~/upload/")
             param("jetbrains.buildServer.deployer.targetUrl", "brother.gusadev.com")
             param("jetbrains.buildServer.sshexec.authMethod", "UPLOADED_KEY")
             param("jetbrains.buildServer.deployer.ssh.transport", "jetbrains.buildServer.deployer.ssh.transport.scp")
         }
+        step {
+            type = "ssh-exec-runner"
+            param("jetbrains.buildServer.deployer.username", "optimax")
+            param("jetbrains.buildServer.sshexec.command", "%deploy_brother%")
+            param("teamcitySshKey", "Common")
+            param("jetbrains.buildServer.deployer.targetUrl", "brother.gusadev.com")
+            param("jetbrains.buildServer.sshexec.authMethod", "UPLOADED_KEY")
+        }
     }
     triggers {
         vcs {
+            branchFilter = "+:refs/tags/*"
         }
     }
 
