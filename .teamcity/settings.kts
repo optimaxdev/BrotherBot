@@ -57,7 +57,7 @@ object Deploy : BuildType({
     }
 
     dependencies {
-        dependency(Tests) {
+        dependency(Build) {
             snapshot {
                 onDependencyFailure = FailureAction.CANCEL
             }
