@@ -15,7 +15,9 @@ object Build : BuildType({
     allowExternalStatus = true
 
     artifactRules = "./ => %build.counter%.brother.tar.gz"
-
+    params {
+        param("teamcity.vcsTrigger.runBuildInNewEmptyBranch", "true")
+    }
     vcs {
         root(DslContext.settingsRoot)
     }
