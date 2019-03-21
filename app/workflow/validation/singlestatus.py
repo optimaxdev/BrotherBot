@@ -36,7 +36,7 @@ def check_single_status(jql: str, channel='general'):
 
     unique_index = {}
     for item in collection.get_list():
-        if item.assignee is None:
+        if item.assignee.ident is None:
             continue
         index = '_'.join([item.assignee.ident, item.status.ident])
         if unique_index.get(index) is None:
