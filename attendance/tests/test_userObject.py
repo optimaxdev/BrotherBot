@@ -29,12 +29,8 @@ class TestUser(TestCase):
 
     def test_discharge_date_wrong_type(self):
         user = UserObject(Api())
-        try:
+        with self.assertRaises(TypeError):
             user.discharge_date = 'wrong-type'
-        except TypeError:
-            pass
-        else:
-            self.fail()
 
     def test_name(self):
         user = UserObject(Api())
@@ -47,12 +43,8 @@ class TestUser(TestCase):
         time = TimeObject(1, Api())
         user.time = time
         self.assertEqual(time, user.time)
-        try:
+        with self.assertRaises(TypeError):
             user.time = 'wrong-type'
-        except TypeError:
-            pass
-        else:
-            self.fail()
 
     def test_is_fired(self):
         user = UserObject(Api())

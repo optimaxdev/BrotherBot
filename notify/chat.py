@@ -3,22 +3,36 @@ import requests
 from config import Config
 
 
-class Chat:
-    def __init__(self):
-        self.token = Config.CHAT_SLACK_TOKEN
-        self.room = Config.CHAT_SLACK_ROOM
+class BaseChat(object):
+    def __init__(self) -> None:
+        super().__init__()
+        self.token = None
 
-    def post_message(self, channel=None, message=None, blocks=None):
-        params = {}
-        if channel is None:
-            params['channel'] = Config.CHAT_SLACK_ROOM
-        else:
-            params['channel'] = channel
-        if message is not None:
+    @property
+    def token(self):
+        return self._token
+
+    @token.setter
+    def token(self, value):
+        self._token = value
+
+    def send_message(self, message, channel):
+        raise NotImplementedError()
+
+
+class SlackChat(BaseChat):
+    def __init__(self):
+        super().__init__()
+        self.token = Config.CHAT_SLACK_TOKEN
+
+    def send_message(self, message, channel):
+        params = {
+            'channel': channel
+        }
+        if type(message) == str:
             params['text'] = message
         else:
-            if blocks is not None:
-                params['blocks'] = blocks
+            params['blocks'] = message
 
         response = requests.post(
             "https://slack.com/api/chat.postMessage",
@@ -30,3 +44,8 @@ class Chat:
         )
 
         return json.loads(response.text)['ok'] is True
+
+
+def chat(type: str) -> BaseChat:
+    if type == "slack": return SlackChat()
+    raise AssertionError("Bad chat creation: " + type)
