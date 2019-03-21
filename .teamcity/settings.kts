@@ -22,7 +22,7 @@ object Build : BuildType({
     }
     steps {
         script {
-            name = "pip install"
+            name = "pip install and test"
             dockerImage = "python:3.6"
             scriptContent = "pip install -r requirements.txt && python -m unittest discover -s ./ -p 'test_*.py'"
         }
