@@ -1,6 +1,7 @@
 import jetbrains.buildServer.configs.kotlin.v2018_2.*
 import jetbrains.buildServer.configs.kotlin.v2018_2.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.script
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildFeatures.commitStatusPublisher
 
 version = "2018.2"
 
@@ -11,6 +12,7 @@ project {
 
 object Build : BuildType({
     name = "Build BrotherBot"
+    allowExternalStatus = true
 
     artifactRules = "./ => %build.counter%.brother.tar.gz"
 
@@ -36,6 +38,7 @@ object Build : BuildType({
 })
 
 object Deploy : BuildType({
+    type = BuildTypeSettings.Type.DEPLOYMENT
     name = "deploy"
     description = "Deploy to GCE instance"
 
