@@ -3,7 +3,7 @@ import click
 from flask.cli import AppGroup
 
 from app import app
-from app.attendance.absent import notify_absent_employees
+from app.attendance.absent import AbsentNotify
 from app.attendance.late import notify_late_employees
 from app.workflow.validation.duedate import check_due_date
 from app.workflow.validation.noassignee import check_no_assignee
@@ -28,7 +28,8 @@ def get_date(date):
 @click.option('--date', default=datetime.now())
 @click.option('--channel', default='general')
 def notify_absent(date, channel):
-    notify_absent_employees(get_date(date), channel=channel)
+    notify = AbsentNotify(date=get_date(date))
+    notify.report('slack', channel)
 
 
 @employee_cli.command()

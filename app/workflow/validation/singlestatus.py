@@ -1,5 +1,5 @@
 from jira.Api import Api
-from notify.chat import Chat
+from notify.chat import chat
 
 
 def get_template(data):

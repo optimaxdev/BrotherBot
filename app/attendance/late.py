@@ -2,7 +2,7 @@ from datetime import datetime
 
 from attendance.Collections import UserCollection
 from config import Config
-from notify.chat import Chat
+from notify.chat import chat
 
 
 def get_template(data: list, date: datetime):
