@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 
 import httpretty as httpretty
 
+from config import Config
 from jira.Api import Api
 
 
@@ -47,17 +48,20 @@ class TestApi(TestCase):
 
     @httpretty.activate
     def test__make_get_bad_json(self):
-        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/bad-json', body="Bad json string")
+        Config.JIRA_HOST = 'http://jira.host'
+        httpretty.register_uri(httpretty.GET, 'http://jira.host/bad-json', body="Bad json string")
         self.assertEqual({}, Api()._make_get('/bad-json', {}))
 
     @httpretty.activate
     def test__make_get_error(self):
-        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/error', body="Bad json string", status=500)
+        Config.JIRA_HOST = 'http://jira.host'
+        httpretty.register_uri(httpretty.GET, 'http://jira.host/error', body="Bad json string", status=500)
         self.assertEqual({}, Api()._make_get('/error', {}))
 
     @httpretty.activate
     def test__make_get(self):
-        httpretty.register_uri(httpretty.GET, 'https://jira.gusadev.com/data', body="[1, 2, {\"a\": 1}]")
+        Config.JIRA_HOST = 'http://jira.host'
+        httpretty.register_uri(httpretty.GET, 'http://jira.host/data', body="[1, 2, {\"a\": 1}]")
         self.assertEqual([1, 2, {'a': 1}], Api()._make_get('/data', {}))
 
     def test_search_false_data(self):
