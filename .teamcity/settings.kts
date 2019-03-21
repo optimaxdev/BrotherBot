@@ -22,10 +22,7 @@ object Build : BuildType({
 
     triggers {
         vcs {
-            branchFilter = """
-            +:refs/heads/*
-            +:refs/tags/*
-            """.trimIndent()
+            branchFilter = "+:*"
         }
     }
     steps {
@@ -68,7 +65,7 @@ object Deploy : BuildType({
     }
     triggers {
         vcs {
-            branchFilter = "+:refs/tags/*"
+            branchFilter = "+:v*"
         }
     }
 
