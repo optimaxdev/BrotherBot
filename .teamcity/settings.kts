@@ -17,6 +17,7 @@ object Build : BuildType({
     artifactRules = "./ => %build.counter%.brother.tar.gz"
     params {
         param("teamcity.vcsTrigger.runBuildInNewEmptyBranch", "true")
+        param("dep.OPT_MS_TestsAndBuilds_Office_BrotherBot_Build.build.counter", "%build.counter%")
     }
     vcs {
         root(DslContext.settingsRoot)
