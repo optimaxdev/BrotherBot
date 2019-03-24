@@ -4,9 +4,9 @@ from flask.cli import AppGroup
 
 from app import app
 from app.attendance.absent import AbsentNotify
-from app.attendance.late import notify_late_employees
+from app.attendance.late import LateNotify
 from app.workflow.validation.duedate import check_due_date
-from app.workflow.validation.noassignee import check_no_assignee
+from app.workflow.validation.noassignee import NoAssigneeNotify
 from app.workflow.validation.singlestatus import check_single_status
 from config import Config
 
@@ -36,7 +36,8 @@ def notify_absent(date, channel):
 @click.option('--date', default=datetime.now().strftime('%Y-%m-%d'))
 @click.option('--channel', default='general')
 def notify_late(date, channel):
-    notify_late_employees(get_date(date), channel)
+    notify = LateNotify(date=get_date(date))
+    notify.report('slack', channel)
 
 
 @workflow_cli.command()
@@ -49,8 +50,10 @@ def validate_single_status(channel):
 @workflow_cli.command()
 @click.option('--channel', default=None)
 def validate_no_assignee(channel):
+    report = NoAssigneeNotify()
     for item in Config.VALIDATOR_NO_ASSIGNEE:
-        check_no_assignee(item['jql'], channel=item['channel'] if channel is None else channel)
+        report.jql = item['jql']
+        report.report('slack', channel=item['channel'] if channel is None else channel)
 
 
 @workflow_cli.command()

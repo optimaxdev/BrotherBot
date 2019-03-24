@@ -2,6 +2,10 @@ from notify.chat import chat as chat_factory
 
 
 class NotifyMessage(object):
+    def __init__(self) -> None:
+        super().__init__()
+        self.data = []
+
     def _get_template(self, data):
         raise NotImplementedError()
 
