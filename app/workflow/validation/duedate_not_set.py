@@ -2,7 +2,7 @@ from app.notify import NotifyMessage
 from jira.Api import Api
 
 
-class SingleStatusNotify(NotifyMessage):
+class DueDateNotSetNotify(NotifyMessage):
     def __init__(self, **kwargs) -> None:
         super().__init__()
         self.jql = kwargs['jql'] if 'jql' in kwargs else None
@@ -18,16 +18,17 @@ class SingleStatusNotify(NotifyMessage):
     def _get_data(self):
         collection = Api().search(self.jql)
 
-        unique_index = {}
-        for item in collection.get_list():
-            if item.assignee.ident is None:
+        error_empty_date = {}
+
+        for issue in collection.get_list():
+            if issue.assignee is None or issue.due_date is not None:
                 continue
-            index = '_'.join([item.assignee.ident, item.status.ident])
-            if unique_index.get(index) is None:
-                unique_index[index] = [item]
-            else:
-                unique_index[index].append(item)
-        return [val for val in unique_index.values() if len(val) > 1]
+            user_id = issue.assignee.ident
+            if not error_empty_date.get(user_id):
+                error_empty_date[user_id] = []
+            error_empty_date[user_id].append(issue)
+
+        return error_empty_date.values()
 
     def _get_template(self, data):
         template = [
@@ -35,7 +36,7 @@ class SingleStatusNotify(NotifyMessage):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Нарушен принцип workflow: *в работе только одна задача на разработчика*"
+                    "text": "Нарушен принцип workflow: *Due дата не установленна*"
                 }
             }
         ]
