@@ -23,5 +23,8 @@ changeProject(DslContext.projectId) {
                 sudo service uwsgi start
             """.trimIndent())
         }
+        add {
+            text("dep.OPT_MS_TestsAndBuilds_Office_BrotherBot_Build.build.counter", "false", display = ParameterDisplay.HIDDEN, allowEmpty = false)
+        }
     }
 }
